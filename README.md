@@ -269,7 +269,7 @@ $().g3Tips({destroy: 'test'})
 
 <h2>2. Operate</h2>
 <h3>2.i Convert</h3>
-<p>Let's convert some nodes having any class to <code>g3.Tips</code> nodes:</p>
+<p>Let's convert some nodes to <code>g3.Tips</code> nodes:</p>
 <pre>
 //this.convert(): nodes having a class
 
@@ -320,8 +320,8 @@ console.log(debug);
    reset: [true|false],                 |-> event: [scroll], target: parent,
                                        /    handler: optimize()
    displayTip: [true|false],           |-> in applyDisplayTip()
-   trackMouse: [true|false],           \   in applyTrackMouse(), event: [mouseenter, focus, mouseleave, blur],
-                                        |-> target: node, handler: trackMouse(), event: [mousemove, click],
+                                       \   in applyTrackMouse(), event: [mouseenter, focus, mouseleave, blur],
+   trackMouse: [true|false],            |-> target: node, handler: trackMouse(), event: [mousemove, click],
                                        /   target: node, handler: trackMouse2()
    animate: [true|false],              \ -> in applyAnimation(), event: [mouseenter, focus, click, mouseleave, blur],
    animateIn: [true|false]             /   target: node, handler: animate()
@@ -330,7 +330,7 @@ console.log(debug);
 on every operation cycle fired by <code>init()</code> some <i>actions</i> will set this data, e.g. actions on handler will set the <code>handler</code> property etc.</p></blockquote>
 
 <h3>2.ii Tooltip handlers</h3>
-<p>We can move our handler in relation with the tooltip by inserting style rules in an embedded style sheet added at the bottom of document's <code>head</code>. This sheet has as <code>id</code> the name of the current object:</p>
+<p>We can move our handler in relation with the tooltip by inserting style rules to the <code>div</code> that represents it (no more embedded stylesheets in head as other would do):</p>
 <pre>
 //this.applyHandlerTip()
 
@@ -359,20 +359,8 @@ console.log(debug);
   10. [0] applyAnimation -> 'false'
   11. [0] applyEvents -> 'false'
 </pre>
-<p>Our handlers are moved to <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code>. The more repetitions you make the more rules are added but the object is smart enough to clear rules that do not correspond to existed nodes in <code>this.instance.$allNodes</code> as is the case when we fire another value for the same set of nodes!</p>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> At the end of every cycle fired by <code>init()</code> there is an automatic <code>autoClean()</code> function that it does among others a rule cleaning.</p>
-<p>The result of 2 consecutive fires, one with <code>25%</code> and the last one with <code>75%</code> for an object named <code>test</code> is this style on head:
-<pre>
-<style id="test">
-.tip > .test_2.tip.top:after, .tip > .test_2.tip.top:before, .tip > .test_2.tip.bottom:after, .tip > .test_2.tip.bottom:before {
-    left: 75%;
-}
-.tip > .test_2.tip.left:after, .tip > .test_2.tip.left:before, .tip > .test_2.tip.right:after, .tip > .test_2.tip.right:before {
-    top: 75%;
-}
-</style>
-</pre>
-the <code>25%</code> value has disappeared.</p>
+<p>Our handlers are moved to <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code>. The more repetitions you make the more rules are put in place of the old ones.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> At initial development stage it was decided to use embedded stylesheets in document's head that lead to a nightmare administering non-used with used ones; after re-designing our style rules all problems cleared!</p>
 </blockquote>
 
 <h3>2.iii Tooltip origin</h3>
@@ -382,7 +370,7 @@ the <code>25%</code> value has disappeared.</p>
 //based on previous tab
 
 var debug = {};
-g3.Tips.get('test').init({handlerOrigin: '50%', 'debug': debug});
+g3.Tips.get('test').init({handlerTip: '25%', handlerOrigin: '50%', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -396,7 +384,7 @@ console.log(debug);
    3. [0] convert -> 'false'
    4. [0] applyTitle -> 'false'
    5. [0] applyPosition -> 'false'
-   6. [0] applyHandlerTip -> 'false'
+   6. [0] applyHandlerTip -> 'true'
    7. [0] applyHandlerOrigin -> 'true'
    8. [0] applyDisplayHandler -> 'false'
    9. [0] applyOptimize -> 'false'
@@ -405,7 +393,7 @@ console.log(debug);
 </pre>
 <p>Our handlers are positioned at <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code> and at the same time the handler is positioned at the centre of the origin.</p>
 <blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities; consider this case: the design is responsive <b>and</b> fluid (these are two different things) and a resize event fires then, it's highly possible for origins to change dimensions too and this forces our calculations about handler position to be redone.</p>
-<p>This is not the end of the story though; a debounce function ensures the firing of one handler at the end of a resize event. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{handlerOrigin: value}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see<code>this.instance.$allNodes.data.tip.handler.origin</code>.</p>
+<p>This is not the end of the story though; a debounce function ensures the firing of one handler at the end of a resize event. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{handlerOrigin: value}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see nodes' data at <code>this.data.tip.handler.origin</code>.</p>
 <p>User can realize the existence of an event positioning handler with the value of <code>this.instance.on.handlerOrigin === true</code>:
 <pre>
 //this.handlerOrigin(): is active?
@@ -427,67 +415,58 @@ console.log($.g3Tips('test').instance.on);
 <h3>2.iv Tooltip optimize</h3>
 <p>This is a tough one: <i>"while the screen is scrolling we need to bring tooltips in view"</i>. Great idea but a nightmare to implement, but-you guess it-it's there!</p>
 <pre>
-//this.applyOptimize
-
-var framewin = $('#stub iframe').get(0).contentWindow;
-var debug1 = {},  debug2 = {};
-
-//create a new embedded style sheet with rules
-$('.tip > .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, handlerOrigin: '50%', 'debug': debug1}).init({optimize: true, 'debug': debug2});
-
-console.log('-----internal function run 1-----');
-console.log(debug1);
-
-console.log('-----internal function run 2-----');
-console.log(debug2);
-</pre>
-<p>Output:</p>
-<pre>
------internal function run 1-----
-
-   1. [0] getStyles -> 'true'
-   2. [0] getNodes -> 'true'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'false'
-   6. [0] applyHandlerTip -> 'false'
-   7. [0] applyHandlerOrigin -> 'true'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'false'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'true'
-
------internal function run 2-----
-
-   1. [0] getStyles -> 'false'
-   2. [0] getNodes -> 'false'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'false'
-   6. [0] applyHandlerTip -> 'false'
-   7. [0] applyHandlerOrigin -> 'false'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'true'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'true'
-</pre>
-<p>As you see we chained method <code>init()</code> the first one been called indirectly by the constructor.</p>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities too; only this time the handler is attached to the page scroll event; a debounce function ensures the firing of one handler at the end of a scroll. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{optimize: true}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see<code>this.instance.$allNodes.data.tip.optimized</code>.</p>
-<p>User can realize the existence of an event optimized handler with the value of <code>this.instance.on.optimize === true</code>:
-<pre>
-//this.optimize(): is active?
+//this.applyHandlerOrigin() + this.applyOptimize(): run side-by-side
 //based on previous tab
 
-console.log('-----event handler for optimize-----');
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('.tip > .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, 
+handlerOrigin: '50%', optimize: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+
+console.log('-----data(\'tip\') for #hugeOrigin-----');
+console.log($('#hugeOrigin', framewin.document).data('tip'), 1);
+
+console.log('-----event handlers-----');
 console.log($.g3Tips('test').instance.on);
 </pre>
 <p>Output:</p>
 <pre>
------event handler for origin-----
+-----internal function run-----
+
+    [0] getNodes -> 'true'
+    [0] convert -> 'false'
+    [0] applyTitle -> 'false'
+    [0] applyPosition -> 'false'
+    [0] applyHandlerTip -> 'false'
+    [0] applyHandlerOrigin -> 'true'
+    [0] applyDisplayHandler -> 'false'
+    [0] applyOptimize -> 'true'
+    [0] applyDisplayTip -> 'false'
+    [0] applyTrackMouse -> 'false'
+    [0] applyAnimation -> 'false'
+    [0] applyEvents -> 'true'
+
+-----data('tip') for #hugeOrigin-----
+
+    [0] pos -> 'bottom'
+    [0] handler -> 'object'[object Object]
+    [1] origin -> '50%'
+    [1] origin_style -> 'left: 28px;'
+    [1] origin_style_x -> 'left: 28px;'
+    [0] optimize -> 'true'
+
+-----event handlers-----
 
     [0] handlerOrigin -> 'true'
     [0] optimize -> 'true'
 </pre>
+<p>Method <code>init()</code> could have been called successively breaking options in two groups, the first time by  the constructor and the second one explicitly.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities too; only this time the handler is attached to the page scroll event; a debounce function ensures the firing of one handler at the end of a scroll. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{optimize: true}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see node's data <code>this.data.tip.optimized</code>.</p>
+<p>User can realize the existence of an event optimized handler with the value of <code>this.instance.on.optimize === true</code>
 </p>
 </blockquote>
 
