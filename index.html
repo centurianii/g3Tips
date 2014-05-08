@@ -1,0 +1,1323 @@
+<!doctype html>
+<html>
+<head>
+   <meta charset=utf-8>
+   <title>Evaluator: Test g3.Tips class</title>
+   <!-- my source files (folders g3 and view), necessary libraries (jquery) and my tests folder (tests):
+      client
+        :
+        |-jquery
+        :  :
+        |-g3
+        |  |- &lt;g3MyClass.js>
+        |  :
+        |-view
+        |  |- g3Tips
+        :  :  |- &lt;tips.js>
+        :  :  |- &lt;tips.rich.css>
+        :  :  |- &lt;tips.plain.css>
+        :  :
+        |-tests
+        |  |-jasmine-standalone-2.0.0
+        |  |  |-lib
+        |  |  |-spec
+        :  :  :
+        |  |-g3
+        |  :  |- &lt;g3MyClass-SpecRunner.html>
+        |  :  |- &lt;g3MyClass-Spec.js>
+        |  :  |- &lt;g3MyClass-SpecHelper.js>
+        |  :  |- g3evaluator.css
+        |  :  |- g3evaluator.js
+        |  :  |- g3evaluator.html (rename this file to test-g3MyClass.html)
+        |  :  |- &lt;test-g3MyClass.html>
+        :  :  :
+   -->
+   <link rel="stylesheet" type="text/css" href="g3evaluator.css">
+</head>
+<body>
+
+<div id="title"><h1 contenteditable="false">Evaluator: Test g3.Tips class<br></h1><span class="">[edit]</span></div><div id="stub" class=""></div><form id="loadFrame">
+<fieldset>
+   <legend class="hover"><b>Manage stub/frame</b></legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="frameSrc">Frame source:</label><input id="frameSrc" size="30" type="text"><br>
+   <input value="Load file in frame" type="button"><input value="Remove frame" type="button"><br>
+   <input value="Clone frame to stub-HEAD" type="button"><input value="Remove cloned" type="button">
+   </div>
+</fieldset>
+</form><form id="bodyHtml">
+<fieldset>
+   <legend class="hover"><b>Load body html (no &lt;script&gt;)</b></legend>
+   <div class="hide">
+   <textarea rows="5" wrap="virtual"></textarea><br>
+   <input value="Load" type="button"><input value="Clear" type="button"><br>
+   <label class="label" for="exclName">Exclude ids:</label><input id="exclName" size="30" type="text">
+   seperate by space or comma or semicolon or vertical bar: [ ,;|]
+   </div>
+</fieldset>
+</form><div id="libraryWrapper">
+<form id="addRemoveLib">
+<fieldset>
+   <legend class="hover">Add/Remove library</legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="libName">Script id:</label><input id="libName" size="30" type="text"><br>
+   <label class="label" for="libPath">Path:</label><input id="libPath" size="30" type="text"><br>
+   <input value="Add" type="button"><input value="Remove" type="button">
+   </div>
+</fieldset>
+</form>
+<form id="optional-addRemoveLib">
+<fieldset>
+   <legend class="hover">Add/Remove optional library</legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="libName">Script id:</label><input id="optional-libName" size="30" type="text"><br>
+   <label class="label" for="libPath">Path:</label><input id="optional-libPath" size="30" type="text"><br>
+   <input value="Add" type="button"><input value="Remove" type="button">
+   </div>
+</fieldset>
+</form>
+</div><div class="clearWrapper"></div><p><span><label class="label" for="loadall">Load all:</label><input id="loadall" type="checkbox"></span>(the order is significant, if errors repeat!)</p><div id="libraryWrapper">
+<form id="libraries">
+<fieldset>
+   <legend>Load library</legend>
+   <label class="label" for="OebPl">g3Class</label><input id="OebPl" value="g3Class.js" type="checkbox"><br>
+   <label class="label" for="khHP2">g3Error</label><input id="khHP2" value="g3Error.js" type="checkbox"><br>
+   <label class="label" for="GSUHM">g3measure</label><input id="GSUHM" value="g3measure.js" type="checkbox"><br>
+   <label class="label" for="DVJyn">g3debounce</label><input id="DVJyn" value="g3debounce.js" type="checkbox"><br>
+   <label class="label" for="UNDDI">jquery.easing</label><input id="UNDDI" value="jquery.easing.1.3.js" type="checkbox"><br>
+   <label class="label" for="JprTo">g3Tips</label><input id="JprTo" value="g3Tips.js" type="checkbox"><br>
+   <label class="label" for="B81Y7">g3css (only for testing)</label><input id="B81Y7" value="g3css.js" type="checkbox"><br>
+</fieldset>
+</form>
+<form id="optional-libraries">
+<fieldset>
+   <legend>Optional</legend>
+<label class="label" for="vLgfB">g3Tips.all.min</label><input id="vLgfB" value="g3Tips.all.min.js" type="checkbox"><br></fieldset>
+</form>
+</div><div class="clearWrapper"></div><p><span><label class="label" for="boardHeights">Equal board heights:</label><input id="boardHeights" type="checkbox"></span><span><label class="label" for="boardWidthSingle">Single column boards:</label><input id="boardWidthSingle" type="checkbox"></span></p><div id="boardWrapper">
+<form class="" id="blackboard">
+<fieldset>
+   <legend><b>Blackboard</b></legend>
+   <label class="label" for="title">Tab title:</label><input id="title" size="40" type="text"><br>
+   <textarea style="width: 100%;" rows="10" wrap="virtual"></textarea><br>
+   <input value="Execute!" type="button"><input disabled="" value="Save" type="button"><input value="Save to a new tab" type="button"><input value="Clear" type="button"><br>
+</fieldset>
+</form>
+<form class="" id="console">
+<fieldset>
+   <legend><b>Console</b></legend>
+   <div class="data"><pre></pre></div>
+   <input value="Clear" type="button">
+</fieldset>
+</form>
+</div><div class="clearWrapper"></div><form id="addRemovePanel">
+<fieldset>
+   <legend class="hover">Add/Remove panel</legend>
+   <div style="display: none;" class="hide">
+   <label class="label" for="panelTitle">Panel title:</label><input id="panelTitle" size="30" type="text"><br>
+   <input value="Add" type="button"><input value="Remove" type="button">
+   </div>
+</fieldset>
+</form><hr><p><span style="padding: 0.4em 0.8em; color: #003380; background-color: #66a3ff;">Load any tab to blackboard</span><span><label class="label" for="panelHeights">Equal panel heights:</label><input id="panelHeights" type="checkbox"></span><span><label class="label" for="panelWidthSingle">Single column panels:</label><input id="panelWidthSingle" type="checkbox"></span></p><div id="tabbedDataWrapper">
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title enabled">Select window to load</p><p class="load">Load tab</p></div>
+<div class="tabs">
+<div class="tabBar"><div class="tab">current window</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">in frame</div><div class="close">X</div></div>
+</div>
+<div class="tabs">
+<div class="data">
+<pre>//run commands to adjust panels to current window
+
+$('#tabbedDataWrapper').find('.data').each(
+function(){
+   if($(this).closest('.tabbedData').find('.title').text() != 'Select window to load'){
+      $(this).html(
+         $(this).html().replace(/var framewin.*contentWindow;/gi, 'var framewin = window;')
+      );
+   }
+}
+);</pre>
+</div>
+<div class="data">
+<pre>//run commands to adjust panels to frame
+
+$('#tabbedDataWrapper').find('.data').each(
+function(){
+   if($(this).closest('.tabbedData').find('.title').text() != 'Select window to load'){
+      $(this).html(
+         $(this).html().replace(/var framewin.*window;/gi, 'var framewin = $\(\'#stub iframe\'\)\.get\(0\)\.contentWindow;')
+      );
+   }
+}
+);</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title">g3.Tips constructor</p><p class="load">Load tab</p></div>
+<div class="tabs">
+<div class="tabBar"><div class="tab">class constructor</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery constructor</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">STATIC.instances</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">STATIC.get()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">STATIC.destroy()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery plugin constructor</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery plugin constructor with destroy</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery plugin constructor is chainable</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery's static $.g3Tips gives g3.Tips static members</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery's instance $().g3Tips(null) gives g3.Tips static members</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery's static $.g3Tips(name) gives g3.Tips.get(name)</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">jquery's instance $().g3Tips(name) gives g3.Tips.get(name)</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">we can built with jquery &amp; later recall object with jquery static</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">g3.Tips instance holds last jquery set</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">we can move back &amp; forth between g3.Tips instances &amp; jquery sets</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">we can even use constructor function without new to get objects</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">we can use different sets to feed a g3.Tips instance</div><div class="close">X</div></div>
+</div>
+<div class="tabs">
+<div class="data">
+<pre>//class constructor
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+var tips = new g3.Tips({parent: framewin.document, name: 'test', 'debug': debug});
+
+console.log('-----g3.Tips object-----');
+console.log(tips);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery constructor
+//load frame: test-g3Tips-stub1.html
+
+//when a name overlaps an error is thrown
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({parent: framewin.document, name: 'another', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//STATIC.instances
+//based on previous tab
+console.log(g3.Tips.instances, 1);</pre>
+</div>
+<div class="data">
+<pre>//STATIC.get()
+//based on previous tab
+
+//let's create 2 more objects with similar names
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+//a no-name object gets the default 'g3Tips'
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({parent: framewin.document, 'debug': debug});
+
+console.log('-----STATIC.get()-----');
+console.log('search for "g3Tips":');
+console.log(g3.Tips.get('g3Tips'));
+console.log('..is it object?');
+console.log(g3.utils.type(g3.Tips.get('g3Tips')));
+console.log('search for /^g3/:');
+console.log(g3.Tips.get(/^g3/));
+console.log('..is it array?');
+console.log(g3.utils.type(g3.Tips.get(/^g3/)));
+console.log('search for /Tips$/:');
+console.log(g3.Tips.get(/Tips$/));
+console.log('..is it array?');
+console.log(g3.utils.type(g3.Tips.get(/Tips$/)));
+</pre>
+</div>
+<div class="data">
+<pre>//STATIC.destroy()
+
+console.log('------destroy-------');
+//while(g3.Tips.instances[0])
+//  g3.Tips.destroy(g3.Tips.instances[0].id);
+//or,
+while($.g3Tips.instances[0])
+  $.g3Tips.destroy(g3.Tips.instances[0].id);
+console.log(g3.Tips.instances, 0);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery plugin constructor:
+//builds g3.Tips objects and fills their nodes
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({name: 'test', parent: framewin.document, 'debug': debug});
+
+console.log('g3.Tips instances: ');
+console.log(g3.Tips.instances, 1);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery plugin constructor with destroy
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery plugin constructor is chainable
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+console.log(
+   'jquery collection: ' + 
+   $('.tip &gt; .tip', framewin.document).parent('.tip').
+   g3Tips({destroy: 'test', name: 'test', parent: framewin.document, 'debug': debug}).
+   to('jquery').length
+);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery's static $.g3Tips gives g3.Tips static members
+//based on previous tab
+
+console.log('-----$.g3Tips-----');
+console.log($.g3Tips);
+</pre>
+</div>
+<div class="data">
+<pre>//jquery's instance $().g3Tips(null) gives g3.Tips static members
+//based on previous tab
+
+console.log('-----$().g3Tips(null)-----');
+console.log($().g3Tips());
+</pre>
+</div>
+<div class="data">
+<pre>//jquery's static $.g3Tips(name) gives g3.Tips.get(name)
+//based on previous tab
+
+console.log('-----$.g3Tips(name)-----');
+console.log($.g3Tips('test'));
+</pre>
+</div>
+<div class="data">
+<pre>//jquery's instance $().g3Tips(name) gives g3.Tips.get(name)
+//based on previous tab
+
+console.log('-----$().g3Tips(name)-----');
+console.log($().g3Tips('test'));
+</pre>
+</div>
+<div class="data">
+<pre>//we can built with jquery &amp; later recall object with jquery static
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').
+g3Tips({destroy: 'test', name: 'test', parent: framewin.document});
+
+console.log('-----Object-----');
+console.log($.g3Tips('test'));
+</pre>
+</div>
+<div class="data">
+<pre>//g3.Tips instance holds last jquery set
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').
+g3Tips({name: 'setA', parent: framewin.document}).
+to('jquery').
+add('#_1 .convert', framewin.document).
+g3Tips({name: 'setB', parent: framewin.document}).
+to('jquery');
+
+console.log('-----jQuery from setA-----');
+console.log(g3.Tips.get('setA').to('jquery').length);
+
+console.log('-----jQuery from setB-----');
+console.log(g3.Tips.get('setB').to('jquery').length);
+</pre>
+</div>
+<div class="data">
+<pre>//we can move back &amp; forth between g3.Tips instances &amp; jquery sets
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----jQuery set-----');
+console.log(
+$('.tip &gt; .tip', framewin.document).parent('.tip').
+g3Tips({destroy: 'setC', name: 'setC', parent: framewin.document}).
+to('jquery').
+add('#_1 .convert', framewin.document).
+g3Tips('setC').
+to('jquery').length
+);
+
+console.log('-----jQuery from setC-----');
+console.log(g3.Tips.get('setC').to('jquery').length);
+</pre>
+</div>
+<div class="data">
+<pre>//we can even use constructor function without new to get objects
+//based on previous tab
+
+console.log('-----Object-----');
+console.log(g3.Tips('test'));
+</pre>
+</div>
+<div class="data">
+<pre>//we can use different sets to feed a g3.Tips instance
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----jQuery set-----');
+console.log(
+$('.tip &gt; .tip', framewin.document).parent('.tip').
+g3Tips({destroy: 'setC', name: 'setC', parent: framewin.document}).
+to('jquery').length
+);
+
+console.log('build &amp; fill an instance: init() was called indirectly');
+console.log('--------------------------------');
+console.log('options.nodes: '+$.g3Tips('setC').options.nodes.length);
+console.log('instance.$nodes: '+$.g3Tips('setC').instance.$nodes.length);
+console.log('instance.$allNodes: '+$.g3Tips('setC').instance.$allNodes.length);
+
+console.log('-----another jQuery set-----');
+console.log(
+$('#_1 .convert', framewin.document).
+g3Tips('setC').
+to('jquery').length
+);
+
+console.log('call an instance: no init()');
+console.log('--------------------------------');
+console.log('options.nodes: '+$.g3Tips('setC').options.nodes.length);
+console.log('instance.$nodes: '+$.g3Tips('setC').instance.$nodes.length);
+console.log('instance.$allNodes: '+$.g3Tips('setC').instance.$allNodes.length);
+
+$.g3Tips('setC').init({'nothing': 'to do'});
+
+console.log('apply init() to an instance');
+console.log('--------------------------------');
+console.log('options.nodes: '+$.g3Tips('setC').options.nodes.length);
+console.log('instance.$nodes: '+$.g3Tips('setC').instance.$nodes.length);
+console.log('instance.$allNodes: '+$.g3Tips('setC').instance.$allNodes.length);
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title">g3.Tips instance properties</p><p class="load">Load tab</p></div>
+<div class="tabs">
+<div class="tabBar"><div class="tab">this.options</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.instance</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.instance.css</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.instance.$nodes</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.instance.handler</div><div class="close">X</div></div>
+</div>
+<div class="tabs">
+<div class="data">
+<pre>//this.options
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document});
+
+console.log('-----this.options-----');
+console.log(g3.Tips.get('test').options);
+</pre>
+</div>
+<div class="data">
+<pre>//this.instance
+//based on previous tab
+
+console.log('-----this.instance-----');
+console.log(g3.Tips.get('test').instance);
+</pre>
+</div>
+<div class="data">
+<pre>//this.instance.css
+//based on previous tab
+
+console.log('-----this.instance.css-----');
+console.log(g3.Tips.get('test').instance.css);
+</pre>
+</div>
+<div class="data">
+<pre>//this.instance.$nodes
+//based on previous tab
+
+console.log('-----this.instance.$nodes.jquery-----');
+console.log(g3.Tips.get('test').instance.$nodes.jquery);
+
+console.log('-----this.instance.$nodes.length-----');
+console.log(g3.Tips.get('test').instance.$nodes.length);
+</pre>
+</div>
+<div class="data">
+<pre>//this.instance.handler
+//based on previous tab
+
+console.log('-----this.instance.handler-----');
+console.log(g3.Tips.get('test').instance.handler);
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title">g3.Tips methods</p><p class="load">Load tab</p></div>
+<div class="tabs">
+<div class="tabBar"><div class="tab">this.getNodes(): run when nodes exist</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.getNodes(): don't run on empty set</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.convert()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.convert(): nodes having a class</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.convert(): check node data</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.convert(): form, label, select, input, textarea, button</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyTitle()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyPosition()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerTip()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">more on this.applyHandlerTip()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerTip(): from another instance</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerTip(): revert to initial instance</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">addBack()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerOrigin()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">check node data('tip'): #hugeOrigin, #hugeTip</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerOrigin(): new instance overlaps nodes</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyDisplayHandler(): hide</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyDisplayHandler(): show</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerOrigin() + this.applyOptimize(): run side-by-side</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyDisplayTip(): true</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyDisplayTip(): false</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">remove this.optimize(): this.handlerOrigin() is re-applied</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerOrigin(): huge origin</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyHandlerOrigin(): still runs</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.handlerOrigin(): is active?</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyOptimize(): last instance set</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.optimize(): is active?</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">add a tooltip but no optimize</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">add a tooltip &amp; optimize</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">remove optimize: from all sets</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">remove handlerOrigin: from all sets</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyTrackMouse()</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">check node data('tip'): #trackmouse</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">remove trackMouse</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">re-apply trackMouse</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): remove animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): add style animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): add js animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): change easing functions in js animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): change from-to in js animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): change events in js animation</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): this.instance.on</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyAnimation(): check node data</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">conflicting animations &amp; events</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">destroy()</div><div class="close">X</div></div>
+</div>
+<div class="tabs">
+<div class="data">
+<pre>//this.getNodes(): run when nodes exist
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----this.getStyles() runs once!-----');
+var debug1 = {}, debug2 = {};
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, 'debug': debug1}).init({'debug': debug2});
+
+console.log('-----internal function run 1-----');
+console.log(debug1);
+
+console.log('-----internal function run 2-----');
+console.log(debug2);
+</pre>
+</div>
+<div class="data">
+<pre>//this.getNodes(): don't run on empty set
+//based on previous tab
+
+console.log('-----this.getNodes()don\'t run on empty set!-----');
+var debug = {};
+g3.Tips.get('test').init({'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//change the type of selected tooltips
+//load frame: test-g3Tips-stub1.html
+
+//build an empty one: 
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+new g3.Tips({destroy: 'empty', name: 'empty', parent: framewin.document, 'debug': debug});
+
+console.log('-----can\'t build tooltips because:------');
+console.log('g3.Tips.get("empty").options.convert = ' + g3.Tips.get('empty').options.convert);
+console.log('it was built with no collection, this.instance.$nodes.length: ' + g3.Tips.get('empty').instance.$nodes.length);
+</pre>
+</div>
+<div class="data">
+<pre>//this.convert(): nodes having a class
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var $nodes = $('#_1 .convert', framewin.document),
+    titles = [],
+    debug = {};
+
+for(var i=0;i&lt; $nodes.length; i++)
+   titles.push('Tooltip #' + (i + 1));
+
+$nodes.g3Tips({destroy: 'convert', name: 'convert', parent: framewin.document, 'convert': true, 'titles': titles, position: '0', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.convert(): check node data
+//based on previous tab
+
+//let's inspect internal node data
+console.log(g3.Tips.get('convert').instance.$nodes.eq(0).data('tip'), 2);
+</pre>
+</div>
+<div class="data">
+<pre>//this.convert(): form, label, select, input, textarea, button
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var $nodes = $('#_2 form, #_2 label, #_2 select, #_2 input, #_2 textarea, #_2 button', framewin.document),
+    titles = [],
+    debug = {};
+
+for(var i=0;i&lt; $nodes.length; i++)
+   titles.push('Tooltip #' + (i + 1));
+
+$nodes.g3Tips({destroy: 'convert', name: 'convert', parent: framewin.document, convert: true, 'titles': titles, position: '-90', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyTitle()
+//load frame: test-g3Tips-stub1.html
+
+//destroy and rebuild with name collition!
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+console.log($('.tip &gt; .tip', 
+framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document}).init({titles: ['one', 'two', 'three'], 'debug': debug}).options.name);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyPosition()
+//based on: 'this.convert(): nodes having a class'
+
+//destroy and rebuild with name collition!
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#_1 .convert', framewin.document).g3Tips({destroy: 'test', name: 'test', parent: framewin.document}).init({position: '270deg', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerTip()
+//load frame: test-g3Tips-stub1.html
+
+//build one: 
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeOrigin', framewin.document).g3Tips({destroy: 'test', name: 'test', parent: framewin.document}).init({handlerTip: '25%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//more on this.applyHandlerTip()
+//different sets can have different handler styles
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeTip', framewin.document).
+g3Tips('test').init({handlerTip: '75%', 'debug': debug}
+);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerTip(): from another instance
+//a new instance applies new styles in handlers
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeTip', framewin.document).g3Tips({name: 'another-test', parent: framewin.document}).init({handlerTip: '80%', 'debug': debug}
+);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerTip(): revert to initial instance
+//the last command re-applies handler position
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeTip', framewin.document).
+g3Tips('test').init({handlerTip: '85%', 'debug': debug}
+);
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//addBack()
+//current set can be merged with all previous
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----before instance.$nodes-----');
+console.log($.g3Tips('test').instance.$nodes.length);
+
+console.log('-----before instance.$allNodes-----');
+console.log($.g3Tips('test').instance.$allNodes.length);
+
+$.g3Tips('test').addBack();
+
+console.log('-----after instance.$nodes-----');
+console.log($.g3Tips('test').instance.$nodes.length);
+
+console.log('-----after instance.$allNodes-----');
+console.log($.g3Tips('test').instance.$allNodes.length);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerOrigin()
+//based on previous tab
+
+var debug = {};
+g3.Tips.get('test').init({handlerOrigin: '50%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//check node data('tip')
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----data(\'tip\') for #hugeOrigin-----');
+console.log($('#hugeOrigin', framewin.document).data('tip'), 1);
+
+console.log('-----data(\'tip\') for #hugeTip-----');
+console.log($('#hugeTip', framewin.document).data('tip'), 1);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerOrigin(): new instance overlaps nodes but, 
+//it does not polute parent with old event handlers
+//load frame: test-g3Tips-stub1.html
+
+//build one: 
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+new g3.Tips({name: 'overlap-test', parent: framewin.document, addStyled: true, handlerOrigin: '70%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyDisplayHandler(): hide
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug1 = {}, debug2 = {}, debug3 = {};
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, 'debug': debug1}).init({handlerTip: '75%', 'debug': debug2}).init({displayHandler: false, 'debug': debug3});
+
+console.log('-----internal function run 1-----');
+console.log(debug1);
+
+console.log('-----internal function run 2-----');
+console.log(debug2);
+
+console.log('-----internal function run 3-----');
+console.log(debug3);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyDisplayHandler(): show
+//based on previous tab
+
+var debug = {};
+
+g3.Tips.get('test').init({displayHandler: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerOrigin() + this.applyOptimize(): run side-by-side
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug1 = {},  debug2 = {};
+
+$.g3Tips('test').init({handlerOrigin: '50%', 'debug': debug1}).init({optimize: true, 'debug': debug2});
+
+console.log('-----internal function run 1-----');
+console.log(debug1);
+
+console.log('-----internal function run 2-----');
+console.log(debug2);
+
+console.log('-----data(\'tip\') for #hugeOrigin-----');
+console.log($('#hugeOrigin', framewin.document).data('tip'), 1);
+
+console.log('-----event handlers-----');
+console.log($.g3Tips('test').instance.on);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyDisplayTip(): true
+//based on previous tab
+
+var debug = {};
+
+g3.Tips.get('test').init({displayTip: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyDisplayTip(): false
+//based on previous tab
+
+var debug = {};
+
+g3.Tips.get('test').init({displayTip: false, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//remove this.optimize(): this.handlerOrigin() is re-applied
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('test').init({off: 'optimize', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+
+console.log('-----data(\'tip\') for #hugeOrigin-----');
+console.log($('#hugeOrigin', framewin.document).data('tip'), 1);
+
+console.log('-----event handlers-----');
+console.log($.g3Tips('test').instance.on);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerOrigin(): huge bottom
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeOrigin', framewin.document).g3Tips({destroy: 'test', name: 'test', parent: framewin.document, handlerTip: '30%', handlerOrigin: '50%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyHandlerOrigin(): still runs
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+//origin handler recalculates new inline styles
+$.g3Tips('test').init({position: '-90deg', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.handlerOrigin(): is active?
+//based on previous tab
+
+console.log('-----event handler for origin-----');
+console.log($.g3Tips('test').instance.on);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyOptimize()
+//based on previous tab
+
+var debug = {};
+g3.Tips.get('test').init({optimize: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.optimize(): is active?
+//based on previous tab
+
+console.log('-----event handler for optimize-----');
+console.log($.g3Tips('test').instance.on);
+</pre>
+</div>
+<div class="data">
+<pre>//add a tooltip but no optimize
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#hugeTip', framewin.document).g3Tips('test').init({handlerTip: '35%', handlerOrigin: '50%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//add a tooltip &amp; optimize
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('test').init({optimize: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);</pre></div><div class="data"><pre>//remove optimize
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('test').init({off: 'optimize', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//remove handlerOrigin
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('test').init({off: 'handlerOrigin', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyTrackMouse()
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#trackmouse', framewin.document).g3Tips({destroy: 'track', name: 'track', parent: framewin.document, convert: true, titles: ['tracking the mouse...'], position: '-90deg', trackMouse: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//check node data('tip')
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+console.log('-----data(\'tip\') for #trackmouse-----');
+console.log($('#trackmouse', framewin.document).parent('.tip').data('tip'), 1);
+</pre>
+</div>
+<div class="data">
+<pre>//remove trackMouse
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('track').init({off: 'trackMouse', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//re-apply trackMouse
+//based on previous tab
+
+var debug = {};
+
+$.g3Tips('track').init({handlerTip: '75%', trackMouse: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): remove animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('convert').init({animation: false, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): add style animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('convert').init({animation: 'fadeInDownBig', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): add js animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$.g3Tips('convert').init({animation: true, duration: 1000, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): change easing functions in js animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+//re-applying animation doesn't add new handlers!
+$.g3Tips('convert').init({animation: true, duration: 1000, animationIn: 'easeInCubic', animationOut: 'easeOutQuint', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): change from-to in js animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+//re-applying animation doesn't add new handlers!
+$.g3Tips('convert').init({animation: true, duration: 200, animationIn: 'easeInQuart', animationOut: 'easeOutQuart', from: '80%', to: '150%', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): change events in js animation
+//based on previous tab
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+//re-applying animation doesn't add new handlers!
+$.g3Tips('convert').init({animation: true, duration: 200, animationIn: 'easeInQuint', animationOut: 'easeOutQuint', from: '150%', to: '300%', eventIn: 'click', eventOut: 'click', 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+</div>
+<div class="data">
+<pre>//this.options
+//based on previous tab
+
+console.log($.g3Tips('convert').instance.on);
+</pre>
+</div>
+<div class="data">
+<pre>//this.applyAnimation(): check node data
+//based on previous tab
+
+//let's inspect internal node data
+console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
+</pre>
+</div>
+<div class="data">
+<pre>//conflicting animations &amp; events
+//based on previous tab
+
+var debug = {};
+
+//conflicting animations/events are cleared internally!
+$.g3Tips('convert').init({trackMouse: true, handlerTip: '75%', handlerOrigin: '10%', optimize: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+
+console.log('-----this.instance.on-----');
+console.log($.g3Tips('convert').instance.on);
+
+console.log('-----data(\'tip\')-----');
+console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
+</pre>
+</div>
+<div class="data">
+<pre>//destroy()
+//based on previous tab
+
+//the animation reverts to a styled one!
+$.g3Tips.destroy('convert');
+</pre>
+</div>
+</div>
+</div>
+</div>
+<div class="gridTabbedData">
+<div class="tabbedData">
+<div class="titleBar"><p class="title">Showcase</p><p class="load">Load tab</p></div>
+<div class="tabs"><div class="tabBar"><div class="tab">Show all animations!</div><div class="close">X</div></div><div class="tabBar"><div class="tab">List js animations</div><div class="close">X</div></div><div class="tabBar"><div class="tab">Show All!</div><div class="close">X</div></div><div class="tabBar"><div class="tab">Optimize All!</div><div class="close">X</div></div></div>
+<div class="tabs"><div class="data">
+<pre>//Show all animations!
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var $buttons = $("form#play button, form#play input[type='button']", framewin.document),
+    $tip = $('form#play', framewin.document).closest('.tip').children('.tip'),
+    $options,
+    time,
+    pos,
+    current = -1,
+    id;
+
+//fill options with animation classes
+function load(){
+   var css = new g3.css.StyleSheetList(framewin, true).filter({href: 'animate.css'}).filter({selector: /\.css\..*/i});
+   var rules = css.getFilterRules()[0];
+   var tmp,
+       arr = [];
+
+   for(var i=0; i&lt;rules.length; i++){
+      tmp = css.item(0).cssRules[rules[i]].selector.match(/css\.(\w+)/i);
+      arr.push('&lt;option&gt;'+tmp[1]+'&lt;/option&gt;');
+   }
+   
+   $('form#play', framewin.document).find('select').html('').append(arr);
+   $options = $('form#play', framewin.document).find('select').children('option');
+}
+
+//reset animation
+function reset(){
+   framewin.clearInterval(id);
+   current = -1;
+   $buttons.each(function(){
+      if($(this).val() == 'Stop!')
+         $(this).prop('disabled', 'disabled');
+      else
+         $(this).removeAttr('disabled');
+   });
+   $tip.removeAttr('class').addClass('tip right animated bounceIn');
+}
+
+//disable buttons except 'stop'
+function disable(){
+   $buttons.each(function(){
+      if($(this).val() == 'Stop!')
+         $(this).removeAttr('disabled');
+      else
+         $(this).prop('disabled', 'disabled');
+   });
+}
+
+//the animation function
+function animate(all){
+   //end &amp; reset
+   if(current &gt;= $options.length || !$options.length){
+      reset();
+      return;
+   }
+   
+   if(all){
+      $options.each(function(ndx){
+         if(ndx &gt; current){
+            $tip.removeAttr('class').addClass('tip animated js ' + pos + ' ' + $(this).val());
+            $(this).prop('selected', true);
+            current = ndx;
+            return false;
+         }
+      });
+   }else{
+      var tmp = false;
+      $options.each(function(ndx){
+         if($(this).prop('selected') &amp;&amp; (ndx &gt; current)){
+            $tip.removeAttr('class').addClass('tip animated js ' + pos + ' ' + $(this).val());
+            $(this).removeProp('selected');
+            current = ndx;
+            tmp = true;
+            return false;
+         }
+      });
+      if(!tmp)
+         reset();
+   }
+}
+
+//event handlers for buttons
+function handlers(){
+   $buttons.click(function(event){
+      time = $('form#play #time', framewin.document).val();
+      pos = $('form#play #pos', framewin.document).val();
+      $tip.removeClass('css js')
+      if($(this).val() === 'Apply all animations!'){
+         id = framewin.setInterval(function(){animate(true)}, time);
+         disable();
+      }else if($(this).val() === 'Apply selected'){
+         id = framewin.setInterval(animate, time);
+         disable();
+      }else if($(this).val() === 'Stop!'){
+         reset();
+      }
+   });
+}
+
+function init(){
+   load();
+   handlers();
+}
+
+init();
+</pre>
+</div>
+<div class="data">
+<pre>//List js animations
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var tmp,
+    arr = [];
+
+for(tmp in $.easing)
+   arr.push('&lt;option&gt;'+tmp+'&lt;/option&gt;');
+
+$('form#js', framewin.document).find('select').html('').append(arr);
+</pre>
+</div>
+<div class="data">
+<pre>//Show All!
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'show', name: 'show', parent: framewin.document, handlerTip: '50%', handlerOrigin: '50%', displayTip: true});
+</pre>
+</div>
+<div class="data"><pre>//Optimize All!
+//load frame: test-g3Tips-stub1.html
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'show2', name: 'show2', parent: framewin.document, handlerTip: '50%', handlerOrigin: '50%', displayTip: true, optimize: true});
+</pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+<script> window.jQuery || document.write('<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-1.9.0.min.js"><\/script>')</script>
+<script>window.jQuery || document.write('<script src="../../jquery/jquery-1.10.2.js"><\/script>')</script>
+<script src="g3debug.js"></script>
+<script src="g3evaluator.js"></script>
+<script>
+$(function(){
+   g3.evaluator.getInstance();
+});
+</script>
+</body>
+</html>

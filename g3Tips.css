@@ -1,0 +1,259 @@
+/* 
+ * Rich Tooltips
+ * -------------
+ * box+text: .tip > span
+ * border box: .tip > span
+ * triangle border: .tip > span:before
+ * triangle: .tip > span:after
+ * define general parameters here...
+ * ---------------------------------
+ * we have >=11 free variables: 
+ * 1. triangle width = 10px
+ * 2. triangle height = 10px
+ * 3. background color: #b2b2b2 or rgba( 178, 178, 178, ? )
+ * 4. border box color: #e0e0e0
+ * 5. border width: 1px
+ * 6. triangle border color: #e0e0e0
+ * 7. triangle border width: 12px (exceeds 2px from triangle)
+ * 8. text color: #333333
+ * 9. animation duration: 0.3s
+ * 10. animation function: ease
+ * 11. border box radius: 5px
+ * Syntax: <tag class="tip tip-top">...<span>My Tooltip</span>...</tag> as long 
+ * as <span>...</span> is the first child of <tag>...</tag>.
+ */
+/* Tag
+ * ---
+ */
+.tip {
+   position: relative;
+   display: inline-block;
+}
+/* Position
+ * --------
+ */
+.tip > .tip, .tip > .tip > .handler, .tip > .tip > .handler:after, .tip > .tip > .handler:before {
+   position: absolute;
+   z-index: 9999;
+   display: block;
+}
+.tip > .tip > .handler:before {
+   z-index: 9998;
+}
+/* Animation
+ * ---------
+ */
+.tip > .tip.transitioned, .tip > .tip.transitioned > .handler  {
+   -webkit-transition: all 0.3s ease;
+   -moz-transition: all 0.3s ease;
+   -ms-transition: all 0.3s ease;
+   -o-transition: all 0.3s ease;
+   transition: all 0.3s ease;
+}
+/* Box
+ * ---
+ */
+.tip > .tip {
+   /* background */
+   background: #b2b2b2;
+   background: -webkit-gradient( linear, left top, left bottom, from( rgba( 178, 178, 178, 1 ) ), to( rgba( 178, 178, 178, .8 ) ) );
+   background: -webkit-linear-gradient( top, rgba( 178, 178, 178, 1 ), rgba( 178, 178, 178, .8 ) );
+   background: -moz-linear-gradient( top, rgba( 178, 178, 178, 1 ), rgba( 178, 178, 178, .8 ) );
+   background: -ms-linear-gradient( top, rgba( 178, 178, 178, 1 ), rgba( 178, 178, 178, .8 ) );
+   background: -o-linear-gradient( top, rgba( 178, 178, 178, 1 ), rgba( 178, 178, 178, .8 ) );
+   background: linear-gradient( top, rgba( 178, 178, 178, 1 ), rgba( 178, 178, 178, .8 ) );
+   /* border */
+   border: 1px solid #e0e0e0;
+   -webkit-border-radius: 5px;
+   -moz-border-radius: 5px;
+   border-radius: 5px;
+   /* shadow */
+   -webkit-box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+   -moz-box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+   box-shadow: 0 3px 5px rgba( 0, 0, 0, .3 );
+}
+/* Text
+ * ----
+ */
+.tip > .tip {
+   /* margin-border-padding */
+   padding: 8px 10px;
+   /* font */
+   font-family: Ubuntu, sans-serif;
+   font-size: 0.875em;
+   text-align: center;
+   line-height: 1.5;
+   color: #333333;
+   text-shadow: 1px 1px rgba( 255, 255, 255, .5 );
+}
+/* Triangle
+ * --------
+ * in different directions
+ */
+.tip > .tip > .handler:after {
+  width: 0;
+  height: 0;
+  border: 10px solid transparent; /* width = 10 */
+  content: '';
+}
+.tip > .tip.top > .handler:after {
+   border-top-color: #b2b2b2;
+}
+.tip > .tip.bottom > .handler:after {
+   border-bottom-color: #b2b2b2;
+}
+.tip > .tip.left > .handler:after {
+   border-left-color: #b2b2b2;
+}
+.tip > .tip.right > .handler:after {
+   border-right-color: #b2b2b2;
+}
+/* Border
+ * ------
+ */
+.tip > .tip > .handler:before {
+  width: 0;
+  height: 0;
+  border: 12px solid transparent; /* width = 12 */
+  content: '';
+}
+.tip > .tip.top > .handler:before {
+   border-top-color: #e0e0e0;
+}
+.tip > .tip.bottom > .handler:before {
+   border-bottom-color: #e0e0e0;
+}
+.tip > .tip.left > .handler:before {
+   border-left-color: #e0e0e0;
+}
+.tip > .tip.right > .handler:before {
+   border-right-color: #e0e0e0;
+}
+/* Visualize: .css, .js
+ * --------------------
+ */
+.tip > .tip, .tip > .tip > .handler {
+   visibility: hidden;
+   opacity: 0;
+}
+.tip > .tip.js, .tip > .tip.js > .handler, 
+.tip:hover > .tip.css, .tip:hover > .tip.css > .handler, 
+.tip:focus > .tip.css, .tip:focus > .tip.css > .handler {
+   visibility: visible;
+   opacity: 1;
+}
+.tip > .tip.js.no_handler > .handler, 
+.tip:hover > .tip.css.no_handler > .handler, 
+.tip:focus > .tip.css.no_handler > .handler {
+   visibility: hidden;
+   opacity: 0;
+}
+/* Top
+ * ---
+ */
+.tip > .tip.top {
+   bottom: 80%;
+}
+.tip > .tip.top > .handler {
+   left: 50%;
+   top: 100%;
+}
+.tip > .tip.top > .handler:after {
+   margin-left: -10px; /* -1 * triangle width = -10 */
+}
+.tip > .tip.top > .handler:before {
+   margin-left: -12px; /* -1 * border width = -12 */
+}
+.tip > .js.top, 
+.tip:hover > .tip.top, .tip:focus > .tip.top {
+   bottom: 100%;
+}
+/* Bottom
+ * ------
+ */
+.tip > .tip.bottom {
+   top: 80%;
+}
+.tip > .tip.bottom > .handler {
+   left: 50%;
+   top: -10px;
+}
+.tip > .tip.bottom > .handler:after {
+   top: -10px;
+   margin-left: -10px; /* -1 * triangle width = -10 */
+}
+.tip > .tip.bottom > .handler:before {
+   top: -14px;
+   margin-left: -12px; /* -1 * border width = -12 */
+}
+.tip > .js.bottom, 
+.tip:hover > .tip.bottom, .tip:focus > .tip.bottom {
+   top: 100%;
+}
+/* Left
+ * ----
+ */
+.tip > .tip.left {
+    right: 80%;
+}
+.tip > .tip.left > .handler {
+   top: 50%;
+   left: 100%;
+}
+.tip > .tip.left > .handler:after {
+   margin-top: -10px; /* -1 * triangle width = -10 */
+}
+.tip > .tip.left > .handler:before {
+   margin-top: -12px; /* -1 * border width = -12 */
+}
+.tip > .js.left, 
+.tip:hover > .tip.left, .tip:focus > .tip.left {
+   right: 100%;
+}
+/* Right
+ * -----
+ */
+.tip > .tip.right {
+   left: 80%;
+}
+.tip > .tip.right > .handler {
+   top: 50%;
+   left: -10px;
+}
+.tip > .tip.right > .handler:after {
+   left: -10px;
+   margin-top: -10px; /* -1 * triangle width = -10 */
+}
+.tip > .tip.right > .handler:before {
+   left: -14px;
+   margin-top: -12px; /* -1 * border width = -12 */
+}
+.tip > .js.right, 
+.tip:hover > .tip.right, .tip:focus > .tip.right {
+   left: 100%;
+}
+/* js helper
+ * ---------
+ */
+.tip_wrap {
+   display: inline-block;
+   margin: 0;
+   border: 0;
+   padding: 0;
+}
+.tip {
+   font-weight: bold;
+   cursor: pointer;
+}
+/* media
+ * -----
+ */
+.tip > .tip > img,
+.tip > .tip > object,
+.tip > .tip > embed,
+.tip > .tip > video {
+   width: auto;
+   height: auto;
+   max-width: none;
+   max-height: none;
+}
