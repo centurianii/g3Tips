@@ -145,6 +145,7 @@ console.log(g3.Tips.get('setC').to('jquery').length);
 -----jQuery from setC-----
 23
 </pre>
+<p>it collected 20 nodes setting <code>this.instance.$nodes = this.instance.$allNodes = 20</code>-we could operate upon them-then, it collected 3 where <code>this.instance.$nodes = 3</code> but <code>this.instance.$allNodes = 23</code>-we could operate upon the last 3.</p>
 <p>What we should remember here is this simple:
 <ul>
 <li>library-to-Tips class with an empty argument leads us to function <code>g3.Tips</code></li>
