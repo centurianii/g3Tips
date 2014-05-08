@@ -237,7 +237,7 @@ options.nodes: 0
 instance.$nodes: 3
 instance.$allNodes: 23
 </pre>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> We were in need to have our functions a storage to operate upon which will be carefully crafted for the style sheets we use, e.g. we can't accept nodes that can't have children, nodes can come from different libraries and so on, so we created a session storage <code>this.instance.$nodes</code>. On the other hand, event handlers need memory to apply upon. As a result, a total sum of all nodes is stored on <code>this.instance.$allNodes</code> to be used by handlers.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> Our functions need a storage to operate upon and these nodes should be carefully crafted for the style sheets in use, e.g. we can't accept nodes that can't have children, nodes can come from different libraries and so on, so we created a session storage <code>this.instance.$nodes</code>. On the other hand, event handlers need some memory to apply upon. As a result, a total sum of all nodes is stored on <code>this.instance.$allNodes</code> to be used by handlers.</p>
 </blockquote>
 
 <h3>1.v Where is it? Destroy it!</h3>
