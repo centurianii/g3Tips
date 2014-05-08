@@ -108,7 +108,7 @@ Total nodes collected: 20
 <blockquote style="border: 2px gray dotted"><i>Development issues:</i> Even in the situation of chaining commands, <code>this.instance.$nodes</code> is still enough as it is refilled by your new collection every time. Do you need  memory for your sets? Just forget it! Actually you don't need memory, (re-)collect a new set drop it in and apply whatever you want using options object <i>(switchboard)</i>.</blockquote>
 <p>The next step was to satisfy an optimized request: <i>"I want my tooltips to be repositioned when the visible area is scrolling"</i>. You have it!</p>
 <blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> That one, brought events in play that operate <b>after</b> the firing of all methods and now we do need a memory variable <code>this.instance.$allNodes</code> to operate upon!</p>
-<p>This is not the end of the story though, every node in our collection stores data about it's last condition so optimization mess up could be reverted. Just fine!</blockquote>
+<p>This is not the end of the story though, every node in our collection stores data about it's last condition so optimization mess up can be reverted. Just fine!</blockquote>
 
 <h3>1.iii JQuery jump in & out</h3>
 <p>JQuery can jump into our class, fill in the temporary node storage, jump out, collect a new set, jump in and start all over again a new circle of operations:
