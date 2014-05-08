@@ -171,7 +171,7 @@ console.log(g3.Tips.get('setC').to('jquery').length);
 <li>moves nodes from temporary storage <code>this.options.nodes</code> to session one <code>this.instance.$nodes</code> and deletes <code>this.options.nodes</code></li>
 <li>adds session storage <code>this.instance.$nodes</code> to permanent <code>this.instance.$allNodes</code></li>
 <li>executes internal functions based on user options and</li>
-<li>resets user options that can fire internal functions so the next cycle can start on</li>
+<li>resets user options that can fire internal functions so the next cycle can start on (like <code>handlerTip</code> that fires <code>applyHandlerTip()</code>, <code>handlerOrigin</code> that fires <code>applyHandlerOrigin()</code> etc.)</li>
 </ol>
 Remember that all internal functions operate upon session storage <code>this.instance.$nodes</code>.
 </p>
