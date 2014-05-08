@@ -16,11 +16,14 @@ g3Tips
 <li>Operate
 <ol>
 <li>Convert</li>
-<li>Tooltip handlers</li>
-<li>Tooltip origin</li>
+<li>Tooltip-to-handler</li>
+<li>Tooltip-to-origin</li>
 <li>Tooltip optimize</li>
 <li>Tooltip position</li>
 <li>Handler display</li>
+<li>Tooltip display</li>
+<li>Track mouse</li>
+<li>Apply js animation</li>
 </ol>
 </li>
 </ol>
@@ -56,7 +59,6 @@ console.log(debug);
 
 -----internal function run-----
 
-    [0] getStyles -> 'true'
     [0] getNodes -> 'false'
     [0] convert -> 'false'
     [0] applyTitle -> 'false'
@@ -65,6 +67,8 @@ console.log(debug);
     [0] applyHandlerOrigin -> 'false'
     [0] applyDisplayHandler -> 'false'
     [0] applyOptimize -> 'false'
+    [0] applyDisplayTip -> 'false'
+    [0] applyTrackMouse -> 'false'
     [0] applyAnimation -> 'false'
     [0] applyEvents -> 'false'
 </pre>
@@ -290,7 +294,6 @@ console.log(debug);
 <pre>
 -----internal function run-----
 
-    [0] getStyles -> 'true'
     [0] getNodes -> 'true'
     [0] convert -> 'true'
     [0] applyTitle -> 'true'
@@ -299,6 +302,8 @@ console.log(debug);
     [0] applyHandlerOrigin -> 'false'
     [0] applyDisplayHandler -> 'false'
     [0] applyOptimize -> 'false'
+    [0] applyDisplayTip -> 'false'
+    [0] applyTrackMouse -> 'false'
     [0] applyAnimation -> 'false'
     [0] applyEvents -> 'false'
 </pre>
@@ -329,7 +334,7 @@ console.log(debug);
 </pre>
 on every operation cycle fired by <code>init()</code> some <i>actions</i> will set this data, e.g. actions on handler will set the <code>handler</code> property etc.</p></blockquote>
 
-<h3>2.ii Tooltip handlers</h3>
+<h3>2.ii Tooltip-to-handler</h3>
 <p>We can move our handler in relation with the tooltip by inserting style rules to the <code>div</code> that represents it (no more embedded stylesheets in head as other would do):</p>
 <pre>
 //this.applyHandlerTip()
@@ -347,23 +352,24 @@ console.log(debug);
 <pre>
 -----internal function run-----
 
-   1. [0] getStyles -> 'false'
-   2. [0] getNodes -> 'true'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'false'
-   6. [0] applyHandlerTip -> 'true'
-   7. [0] applyHandlerOrigin -> 'false'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'false'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'false'
+   [0] getNodes -> 'true'
+   [0] convert -> 'false'
+   [0] applyTitle -> 'false'
+   [0] applyPosition -> 'false'
+   [0] applyHandlerTip -> 'true'
+   [0] applyHandlerOrigin -> 'false'
+   [0] applyDisplayHandler -> 'false'
+   [0] applyOptimize -> 'false'
+   [0] applyDisplayTip -> 'false'
+   [0] applyTrackMouse -> 'false'
+   [0] applyAnimation -> 'false'
+   [0] applyEvents -> 'false'
 </pre>
 <p>Our handlers are moved to <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code>. The more repetitions you make the more rules are put in place of the old ones.</p>
 <blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> At initial development stage it was decided to use embedded stylesheets in document's head that lead to a nightmare administering non-used with used ones; after re-designing our style rules all problems cleared!</p>
 </blockquote>
 
-<h3>2.iii Tooltip origin</h3>
+<h3>2.iii Tooltip-to-origin</h3>
 <p>Can we reposition the handler compared with the origin in such a manner that this move will drift the whole tooltip? Yes, we can. Essentially this means that we re-position our tooltip based on the handler and not the distance of the tooltip to the origin as css rules do. Eventually, this behaviour is closer to what a user expects:</p>
 <pre>
 //this.applyHandlerOrigin()
@@ -379,17 +385,18 @@ console.log(debug);
 <pre>
 -----internal function run-----
 
-   1. [0] getStyles -> 'false'
-   2. [0] getNodes -> 'false'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'false'
-   6. [0] applyHandlerTip -> 'true'
-   7. [0] applyHandlerOrigin -> 'true'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'false'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'true'
+   [0] getNodes -> 'false'
+   [0] convert -> 'false'
+   [0] applyTitle -> 'false'
+   [0] applyPosition -> 'false'
+   [0] applyHandlerTip -> 'true'
+   [0] applyHandlerOrigin -> 'true'
+   [0] applyDisplayHandler -> 'false'
+   [0] applyOptimize -> 'false'
+   [0] applyDisplayTip -> 'false'
+   [0] applyTrackMouse -> 'false'
+   [0] applyAnimation -> 'false'
+   [0] applyEvents -> 'true'
 </pre>
 <p>Our handlers are positioned at <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code> and at the same time the handler is positioned at the centre of the origin.</p>
 <blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities; consider this case: the design is responsive <b>and</b> fluid (these are two different things) and a resize event fires then, it's highly possible for origins to change dimensions too and this forces our calculations about handler position to be redone.</p>
@@ -488,32 +495,32 @@ console.log(debug);
 <pre>
 -----internal function run-----
 
-   1. [0] getStyles -> 'false'
-   2. [0] getNodes -> 'false'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'true'
-   6. [0] applyHandlerTip -> 'false'
-   7. [0] applyHandlerOrigin -> 'false'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'false'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'false'
+   [0] getNodes -> 'false'
+   [0] convert -> 'false'
+   [0] applyTitle -> 'false'
+   [0] applyPosition -> 'true'
+   [0] applyHandlerTip -> 'false'
+   [0] applyHandlerOrigin -> 'false'
+   [0] applyDisplayHandler -> 'false'
+   [0] applyOptimize -> 'false'
+   [0] applyDisplayTip -> 'false'
+   [0] applyTrackMouse -> 'false'
+   [0] applyAnimation -> 'false'
+   [0] applyEvents -> 'false'
 </pre>
 <p>The top position is 0deg, the left 90deg and so on.</p>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$nodes.data.pos</code>.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.pos</code>.</p>
 </blockquote>
 
 <h3>2.vi Handler display</h3>
 <p>We can show or hide the handler:</p>
 <pre>
-//this.applyPosition()
+//this.applyDisplayHandler(): show
+//based on previous tab
 
-//destroy and rebuild with name collition!
-var framewin = $('#stub iframe').get(0).contentWindow;
 var debug = {};
 
-$('.tip > .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document}).init({position: '270deg', 'debug': debug});
+g3.Tips.get('test').init({displayHandler: true, 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -522,24 +529,119 @@ console.log(debug);
 <pre>
 -----internal function run-----
 
-   1. [0] getStyles -> 'false'
-   2. [0] getNodes -> 'false'
-   3. [0] convert -> 'false'
-   4. [0] applyTitle -> 'false'
-   5. [0] applyPosition -> 'true'
-   6. [0] applyHandlerTip -> 'false'
-   7. [0] applyHandlerOrigin -> 'false'
-   8. [0] applyDisplayHandler -> 'false'
-   9. [0] applyOptimize -> 'false'
-  10. [0] applyAnimation -> 'false'
-  11. [0] applyEvents -> 'false'
+   [0] getNodes -> 'false'
+   [0] convert -> 'false'
+   [0] applyTitle -> 'false'
+   [0] applyPosition -> 'false'
+   [0] applyHandlerTip -> 'false'
+   [0] applyHandlerOrigin -> 'false'
+   [0] applyDisplayHandler -> 'true'
+   [0] applyOptimize -> 'false'
+   [0] applyDisplayTip -> 'false'
+   [0] applyTrackMouse -> 'false'
+   [0] applyAnimation -> 'false'
+   [0] applyEvents -> 'false'
 </pre>
-<p>The top position is 0deg, the left 90deg and so on.</p>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$allNodes.data.pos</code>.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.pos</code>.</p>
 </blockquote>
 
-Usage
-=====
+<h3>2.vii Tooltip display</h3>
+<p>We can show or hide the entire tooltip:</p>
+<pre>
+//this.applyDisplayTip(): false
+//based on previous tab
+
+var debug = {};
+
+g3.Tips.get('test').init({displayTip: true, 'debug': debug});
+
+console.log('-----internal function run-----');
+console.log(debug);
+</pre>
+<p>Output:</p>
+<pre>
+-----internal function run-----
+
+    [0] getNodes -> 'false'
+    [0] convert -> 'false'
+    [0] applyTitle -> 'false'
+    [0] applyPosition -> 'false'
+    [0] applyHandlerTip -> 'false'
+    [0] applyHandlerOrigin -> 'false'
+    [0] applyDisplayHandler -> 'false'
+    [0] applyOptimize -> 'false'
+    [0] applyDisplayTip -> 'true'
+    [0] applyTrackMouse -> 'false'
+    [0] applyAnimation -> 'false'
+    [0] applyEvents -> 'false'
+</pre>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.pos</code>. Re-enabling with <code>{displayTip: false}</code> means normal behaviour css-based is restored with mouse enter/leave or focus/blur.</p>
+</blockquote>
+
+<h3>2.viii Track mouse</h3>
+<p>We can make the tooltip to follow the mouse on any origin:</p>
+<pre>
+//this.applyTrackMouse()
+
+var framewin = $('#stub iframe').get(0).contentWindow;
+var debug = {};
+
+$('#trackmouse', framewin.document).g3Tips({destroy: 'track', name: 'track', parent: framewin.document, convert: true, titles: ['tracking the mouse...'], position: '-90deg', trackMouse: true, 'debug': debug});
+
+</pre>
+<p>Output:</p>
+<pre>
+-----internal function run-----
+
+    [0] getNodes -> 'true'
+    [0] convert -> 'true'
+    [0] applyTitle -> 'true'
+    [0] applyPosition -> 'true'
+    [0] applyHandlerTip -> 'false'
+    [0] applyHandlerOrigin -> 'false'
+    [0] applyDisplayHandler -> 'false'
+    [0] applyOptimize -> 'false'
+    [0] applyDisplayTip -> 'false'
+    [0] applyTrackMouse -> 'true'
+    [0] applyAnimation -> 'true'
+    [0] applyEvents -> 'true'
+</pre>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.trackMouse</code>. Disable with <code>{off: 'trackMouse'}</code>.</p>
+</blockquote>
+
+<h3>2.ix Change animation</h3>
+<p>We can apply a different css animation based on file <code>animate.css</code> that contains tens of animations:</p>
+<pre>
+//this.applyAnimation(): add style animation
+
+$.g3Tips('test').init({animation: 'fadeInDownBig'});
+</pre>
+<p>We can convert a css to a javascript animation:</p>
+<pre>
+//this.applyAnimation(): add js animation
+
+$.g3Tips('test').init({animation: true, duration: 1000});
+</pre>
+<p>We can change easing function to a javascript animation:</p>
+<pre>
+//this.applyAnimation(): this.applyAnimation(): change easing functions in js animation
+
+$.g3Tips('test').init({animation: true, duration: 1000, animationIn: 'easeInCubic', animationOut: 'easeOutQuint'});
+</pre>
+<p>We can change the starting and ending distances of tooltips to a javascript animation:</p>
+<pre>
+//this.applyAnimation(): change from-to in js animation
+
+$.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuart', animationOut: 'easeOutQuart', from: '80%', to: '150%'});
+</pre>
+<p>We can change the starting and ending events in a javascript animation:</p>
+<pre>
+//this.applyAnimation(): this.applyAnimation(): change events in js animation
+
+$.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuint', animationOut: 'easeOutQuint', from: '150%', to: '300%', eventIn: 'click', eventOut: 'click'});
+</pre>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.animate</code>. You can't disable a javascript animation with: <code>{animation: false/'styled'}</code>; use instead: <code>{off: 'animation'}</code> to revert to css behaviour and additionally re-apply a style animation we done first in above.</p>
+</blockquote>
 
 Dependencies
 ============
