@@ -27,7 +27,7 @@ g3Tips
 
 <h2>1. Construction</h2>
 <h3>1.i Autonomous object</h3>
-<p>Let's create an object:</p>
+<p>Let's create an empty object with default name <code>g3Tips</code> and debug enabled to catch some internal function output:</p>
 <pre>
 //class constructor
 
@@ -68,7 +68,7 @@ console.log(debug);
     [0] applyAnimation -> 'false'
     [0] applyEvents -> 'false'
 </pre>
-<p>As you can see the object contains 3 objects as members and 4 functions. From the perspective of user only <code>this.instance.$allNodes</code>, <code>this.instance.$nodes</code> and <code>this.init()</code> are really usable. So, there is no function-to-user interface which is brilliant! Everything is controlled from options, our <i>switchboard</i>.</p>
+<p>As you can see the object contains 2 objects as members, 1 array and 4 functions. From the perspective of user only <code>this.instance.$allNodes</code>, <code>this.instance.$nodes</code> and <code>this.init()</code> are really usable. So, there is no function-to-user interface which is brilliant! Everything is controlled from options, our <b><i>switchboard</i></b>.</p>
 <p>That was an empty object though.</p>
 
 <h3>1.ii Through JQuery</h3>
@@ -104,11 +104,11 @@ Total nodes collected: 20
    9. [0] $allNodes -> 'object'[object Object]
 </pre>
 <p>As you can see <code>this.instance</code> contains pretty much everything we'll ever need to look for.</p>
-<p>The initial idea was that simple: <i>"one set of nodes is handled by one object g3.Tips"</i> and in that situation <code>this.instance.$nodes</code> would be enough. Going one step further I decided to satisfy this demand: <i>"I want to chain commands and every one can work with a different set"</i>. This is possible too, keep reading on <i>1.iii></i>!</p>
-<small style="border: 2px gray dotted"><i>Development issues:</i> Even in the situation of chaining commands, <code>this.instance.$nodes</code> is still enough as it is refilled by your new collection every time. Do you need  memory for your sets? Just forget it! Actually you don't need memory, (re-)collect a new set drop it in and apply whatever you want using options object <i>(switchboard)</i>.</small>
+<p>The initial idea was that simple: <i>"one set of nodes is handled by one object g3.Tips"</i> and in that situation <code>this.instance.$nodes</code> would be enough. Going one step further I decided to satisfy this demand: <i>"I want to chain commands and every one can work with a different set"</i>. This is possible too, keep reading on <i>(1.iii).</i></p>
+<blockquote style="border: 2px gray dotted"><i>Development issues:</i> Even in the situation of chaining commands, <code>this.instance.$nodes</code> is still enough as it is refilled by your new collection every time. Do you need  memory for your sets? Just forget it! Actually you don't need memory, (re-)collect a new set drop it in and apply whatever you want using options object <i>(switchboard)</i>.</blockquote>
 <p>The next step was to satisfy an optimized request: <i>"I want my tooltips to be repositioned when the visible area is scrolling"</i>. You have it!</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> That one, brought events in play that operate <b>after</b> the firing of all methods and now we do need a memory variable <code>this.instance.$allNodes</code> to operate upon!</p>
-<p>This is not the end of the story though, every node in our collection stores data about it's last condition so optimization mess up could be reverted. Just fine!</small>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> That one, brought events in play that operate <b>after</b> the firing of all methods and now we do need a memory variable <code>this.instance.$allNodes</code> to operate upon!</p>
+<p>This is not the end of the story though, every node in our collection stores data about it's last condition so optimization mess up could be reverted. Just fine!</blockquote>
 
 <h3>1.iii JQuery jump in & out</h3>
 <p>JQuery can jump into our class, fill in the temporary node storage, jump out, collect a new set, jump in and start all over again a new circle of operations:
@@ -236,8 +236,8 @@ options.nodes: 0
 instance.$nodes: 3
 instance.$allNodes: 23
 </pre>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> We were in need to have our functions a storage to operate upon which will be carefully crafted for the style sheets we use, e.g. we can't accept nodes that can't have children, nodes can come from different libraries and so on, so we created a session storage <code>this.instance.$nodes</code>. On the other hand, event handlers need memory to apply upon. As a result, a total sum of all nodes is stored on <code>this.instance.$allNodes</code> to be used by handlers.</p>
-</small>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> We were in need to have our functions a storage to operate upon which will be carefully crafted for the style sheets we use, e.g. we can't accept nodes that can't have children, nodes can come from different libraries and so on, so we created a session storage <code>this.instance.$nodes</code>. On the other hand, event handlers need memory to apply upon. As a result, a total sum of all nodes is stored on <code>this.instance.$allNodes</code> to be used by handlers.</p>
+</blockquote>
 
 <h3>1.v Where is it? Destroy it!</h3>
 <p>You can build an object and never store it because static members of <code>g3.Tips</code> safe guard it:</p>
@@ -257,14 +257,14 @@ $.g3Tips({destroy: 'test'})
 $().g3Tips({destroy: 'test'})
 </pre>
 <p>Whenever we jump into our object, instance property <code>this.options.nodes</code> is filled by the library's set.</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> This object behaviour is what I call <i>hybrid</i>; an object that can live between two worlds.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This object behaviour is what I call <i>hybrid</i>; an object that can live between two worlds.</p>
 <p>On object's (re-)entry, it's first operations are to 
 <ol>
 <li>clear & fill property <code>this.instance.$nodes</code> with the library's set of nodes</li>
 <li>add (accumulate) these nodes to <code>this.instance.$allNodes</code> and</li>
 <li>clear <code>this.options.nodes</code>.</li>
 </ol>
-</p></small>
+</p></blockquote>
 
 <h2>2. Operate</h2>
 <h3>2.i Convert</h3>
@@ -302,7 +302,7 @@ console.log(debug);
     [0] applyEvents -> 'false'
 </pre>
 <p>Our nodes with class <code>.convert</code> obtained tooltips with messages set by us. The direction of the tooltips was set on top (0 degrees following the erroneous angle in css3 <code>linear-gradient</code>).</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> The following data is set internally on the origins of the tooltips, origins are actually the set of nodes contained in <code>this.instance.$nodes</code>:
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following data is set internally on the origins of the tooltips, origins are actually the set of nodes contained in <code>this.instance.$nodes</code>:
 <pre>
 'tip': {
    'pos': [top|bottom|right|left],     | -> in applyPosition()
@@ -326,7 +326,7 @@ console.log(debug);
    animateIn: [true|false]             /   target: node, handler: animate()
 }
 </pre>
-on every operation cycle fired by <code>init()</code> some <i>actions</i> will set this data, e.g. actions on handler will set the <code>handler</code> property etc.</p></small>
+on every operation cycle fired by <code>init()</code> some <i>actions</i> will set this data, e.g. actions on handler will set the <code>handler</code> property etc.</p></blockquote>
 
 <h3>2.ii Tooltip handlers</h3>
 <p>We can move our handler in relation with the tooltip by inserting style rules in an embedded style sheet added at the bottom of document's <code>head</code>. This sheet has as <code>id</code> the name of the current object:</p>
@@ -359,7 +359,7 @@ console.log(debug);
   11. [0] applyEvents -> 'false'
 </pre>
 <p>Our handlers are moved to <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code>. The more repetitions you make the more rules are added but the object is smart enough to clear rules that do not correspond to existed nodes in <code>this.instance.$allNodes</code> as is the case when we fire another value for the same set of nodes!</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> At the end of every cycle fired by <code>init()</code> there is an automatic <code>autoClean()</code> function that it does among others a rule cleaning.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> At the end of every cycle fired by <code>init()</code> there is an automatic <code>autoClean()</code> function that it does among others a rule cleaning.</p>
 <p>The result of 2 consecutive fires, one with <code>25%</code> and the last one with <code>75%</code> for an object named <code>test</code> is this style on head:
 <pre>
 <style id="test">
@@ -372,7 +372,7 @@ console.log(debug);
 </style>
 </pre>
 the <code>25%</code> value has disappeared.</p>
-</small>
+</blockquote>
 
 <h3>2.iii Tooltip origin</h3>
 <p>Can we reposition the handler compared with the origin in such a manner that this move will drift the whole tooltip? Yes, we can. Essentially this means that we re-position our tooltip based on the handler and not the distance of the tooltip to the origin as css rules do. Eventually, this behaviour is closer to what a user expects:</p>
@@ -403,7 +403,7 @@ console.log(debug);
   11. [0] applyEvents -> 'true'
 </pre>
 <p>Our handlers are positioned at <code>25%</code> from the left/top side of the tooltip instead of the default <code>50%</code> and at the same time the handler is positioned at the centre of the origin.</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities; consider this case: the design is responsive <b>and</b> fluid (these are two different things) and a resize event fires then, it's highly possible for origins to change dimensions too and this forces our calculations about handler position to be redone.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities; consider this case: the design is responsive <b>and</b> fluid (these are two different things) and a resize event fires then, it's highly possible for origins to change dimensions too and this forces our calculations about handler position to be redone.</p>
 <p>This is not the end of the story though; a debounce function ensures the firing of one handler at the end of a resize event. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{handlerOrigin: value}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see<code>this.instance.$allNodes.data.tip.handler.origin</code>.</p>
 <p>User can realize the existence of an event positioning handler with the value of <code>this.instance.on.handlerOrigin === true</code>:
 <pre>
@@ -421,7 +421,7 @@ console.log($.g3Tips('test').instance.on);
     [0] optimize -> 'true'
 </pre>
 </p>
-</small>
+</blockquote>
 
 <h3>2.iv Tooltip optimize</h3>
 <p>This is a tough one: <i>"while the screen is scrolling we need to bring tooltips in view"</i>. Great idea but a nightmare to implement, but-you guess it-it's there!</p>
@@ -471,7 +471,7 @@ console.log(debug2);
   11. [0] applyEvents -> 'true'
 </pre>
 <p>As you see we chained method <code>init()</code> the first one been called indirectly by the constructor.</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities too; only this time the handler is attached to the page scroll event; a debounce function ensures the firing of one handler at the end of a scroll. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{optimize: true}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see<code>this.instance.$allNodes.data.tip.optimized</code>.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> This scenario needs event handling capabilities too; only this time the handler is attached to the page scroll event; a debounce function ensures the firing of one handler at the end of a scroll. It's this handler function that is been called by <code>init()</code> the first time user passes as argument <code>{optimize: true}</code>. The event handler needs some coordination and this is the role of node <code>data</code> that give information about where calculations should apply to, see<code>this.instance.$allNodes.data.tip.optimized</code>.</p>
 <p>User can realize the existence of an event optimized handler with the value of <code>this.instance.on.optimize === true</code>:
 <pre>
 //this.optimize(): is active?
@@ -488,7 +488,7 @@ console.log($.g3Tips('test').instance.on);
     [0] optimize -> 'true'
 </pre>
 </p>
-</small>
+</blockquote>
 
 <h3>2.v Tooltip position</h3>
 <p>We can control where the tooltips will be set: top, bottom, left, right:</p>
@@ -521,8 +521,8 @@ console.log(debug);
   11. [0] applyEvents -> 'false'
 </pre>
 <p>The top position is 0deg, the left 90deg and so on.</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$nodes.data.pos</code>.</p>
-</small>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$nodes.data.pos</code>.</p>
+</blockquote>
 
 <h3>2.vi Handler display</h3>
 <p>We can show or hide the handler:</p>
@@ -555,8 +555,8 @@ console.log(debug);
   11. [0] applyEvents -> 'false'
 </pre>
 <p>The top position is 0deg, the left 90deg and so on.</p>
-<small style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$allNodes.data.pos</code>.</p>
-</small>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.instance.$allNodes.data.pos</code>.</p>
+</blockquote>
 
 Usage
 =====
