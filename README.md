@@ -23,7 +23,7 @@ g3Tips
 <li>Handler display</li>
 <li>Tooltip display</li>
 <li>Track mouse</li>
-<li>Apply js animation</li>
+<li>Change animation</li>
 </ol>
 </li>
 </ol>
