@@ -277,7 +277,7 @@ var framewin = $('#stub iframe').get(0).contentWindow,
     titles = [],
     debug = {};
 
-for(var i=0;i< $nodes.length; i++)
+for(var i=0;i&lt; $nodes.length; i++)
    titles.push('Tooltip #' + (i + 1));
 
 $nodes.g3Tips({destroy: 'convert', name: 'convert', parent: framewin.document, 'convert': true, 'titles': titles, position: '0', 'debug': debug});
