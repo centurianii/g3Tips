@@ -1566,7 +1566,7 @@ function load(){
 
    for(var i=0; i&lt;rules.length; i++){
       tmp = css.item(0).cssRules[rules[i]].selector.match(/css\.(\w+)/i);
-      arr.push('<option>'+tmp[1]+'</option>');
+      arr.push('&lt;option>'+tmp[1]+'&lt;/option>');
    }
    
    $('form#play', framewin.document).find('select').html('').append(arr);
