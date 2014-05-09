@@ -406,7 +406,7 @@ Nulla eu ultricies metus. Nulla elit sem, congue eu diam sed, tincidunt congue d
 
 </div>
 
-<div id="title"><h1 contenteditable="false">Evaluator: Test g3.Tips class<br></h1><span class="">[edit]</span></div><div id="stub" class=""></div><form id="loadFrame">
+</div><div id="title"><h1 contenteditable="false">Evaluator: Test g3.Tips class<br></h1><span class="">[edit]</span></div><div id="stub" class=""></div><form id="loadFrame">
 <fieldset>
    <legend class="hover"><b>Manage stub/frame</b></legend>
    <div style="display: none;" class="hide">
@@ -893,7 +893,7 @@ console.log(g3.Tips.get('test').instance.handler);
 <div class="tabBar"><div class="tab">this.applyHandlerOrigin()</div><div class="close">X</div></div>
 <div class="tabBar"><div class="tab">check node data('tip'): #hugeOrigin, #hugeTip</div><div class="close">X</div></div>
 <div class="tabBar"><div class="tab">this.applyHandlerOrigin(): new instance overlaps nodes</div><div class="close">X</div></div>
-<div class="tabBar"><div class="tab">this.applyDisplayHandler(): hide</div><div class="close">X</div></div>
+<div class="tabBar"><div class="tab">this.applyDisplayHandler(): a new big set with hidden handlers</div><div class="close">X</div></div>
 <div class="tabBar"><div class="tab">this.applyDisplayHandler(): show</div><div class="close">X</div></div>
 <div class="tabBar"><div class="tab">this.applyHandlerOrigin() + this.applyOptimize(): run side-by-side</div><div class="close">X</div></div>
 <div class="tabBar"><div class="tab">this.applyDisplayTip(): true</div><div class="close">X</div></div>
@@ -1127,10 +1127,12 @@ console.log($.g3Tips('test').instance.$allNodes.length);
 </div>
 <div class="data">
 <pre>//this.applyHandlerOrigin()
-//based on previous tab
+//load frame: test-g3Tips-stub1.html
 
+var framewin = window;
 var debug = {};
-g3.Tips.get('test').init({handlerOrigin: '50%', 'debug': debug});
+
+$('#hugeOrigin, #hugeTip', framewin.document).g3Tips({destroy: 'test', name: 'test', parent: framewin.document, handlerOrigin: '50%', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1165,7 +1167,7 @@ console.log(debug);
 </pre>
 </div>
 <div class="data">
-<pre>//this.applyDisplayHandler(): hide
+<pre>//this.applyDisplayHandler(): a new big set with hidden handlers
 //load frame: test-g3Tips-stub1.html
 
 var framewin = window;
@@ -1261,7 +1263,7 @@ console.log($.g3Tips('test').instance.on);
 </pre>
 </div>
 <div class="data">
-<pre>//this.applyHandlerOrigin(): huge bottom
+<pre>//this.applyHandlerOrigin(): huge origin
 //load frame: test-g3Tips-stub1.html
 
 var framewin = window;
@@ -1412,12 +1414,12 @@ console.log(debug);
 </div>
 <div class="data">
 <pre>//this.applyAnimation(): remove animation
-//based on previous tab
+//load frame: test-g3Tips-stub1.html
 
 var framewin = window;
 var debug = {};
 
-$.g3Tips('convert').init({animation: false, 'debug': debug});
+$('.tip &gt; .tip', framewin.document).parent('.tip').g3Tips({destroy: 'test', name: 'test', parent: framewin.document, animation: false, 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1430,7 +1432,7 @@ console.log(debug);
 var framewin = window;
 var debug = {};
 
-$.g3Tips('convert').init({animation: 'fadeInDownBig', 'debug': debug});
+$.g3Tips('test').init({animation: 'fadeInDownBig', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1443,7 +1445,7 @@ console.log(debug);
 var framewin = window;
 var debug = {};
 
-$.g3Tips('convert').init({animation: true, duration: 1000, 'debug': debug});
+$.g3Tips('test').init({animation: true, duration: 1000, 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1457,7 +1459,7 @@ var framewin = window;
 var debug = {};
 
 //re-applying animation doesn't add new handlers!
-$.g3Tips('convert').init({animation: true, duration: 1000, animationIn: 'easeInCubic', animationOut: 'easeOutQuint', 'debug': debug});
+$.g3Tips('test').init({animation: true, duration: 1000, animationIn: 'easeInCubic', animationOut: 'easeOutQuint', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1471,7 +1473,7 @@ var framewin = window;
 var debug = {};
 
 //re-applying animation doesn't add new handlers!
-$.g3Tips('convert').init({animation: true, duration: 200, animationIn: 'easeInQuart', animationOut: 'easeOutQuart', from: '80%', to: '150%', 'debug': debug});
+$.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuart', animationOut: 'easeOutQuart', from: '80%', to: '150%', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1485,7 +1487,7 @@ var framewin = window;
 var debug = {};
 
 //re-applying animation doesn't add new handlers!
-$.g3Tips('convert').init({animation: true, duration: 200, animationIn: 'easeInQuint', animationOut: 'easeOutQuint', from: '150%', to: '300%', eventIn: 'click', eventOut: 'click', 'debug': debug});
+$.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuint', animationOut: 'easeOutQuint', from: '150%', to: '300%', eventIn: 'click', eventOut: 'click', 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
@@ -1503,7 +1505,7 @@ console.log($.g3Tips('convert').instance.on);
 //based on previous tab
 
 //let's inspect internal node data
-console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
+console.log($.g3Tips('test').instance.$nodes.eq(0).data('tip'), 1);
 </pre>
 </div>
 <div class="data">
@@ -1513,16 +1515,16 @@ console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
 var debug = {};
 
 //conflicting animations/events are cleared internally!
-$.g3Tips('convert').init({trackMouse: true, handlerTip: '75%', handlerOrigin: '10%', optimize: true, 'debug': debug});
+$.g3Tips('test').init({trackMouse: true, handlerTip: '75%', handlerOrigin: '10%', optimize: true, 'debug': debug});
 
 console.log('-----internal function run-----');
 console.log(debug);
 
 console.log('-----this.instance.on-----');
-console.log($.g3Tips('convert').instance.on);
+console.log($.g3Tips('test').instance.on);
 
 console.log('-----data(\'tip\')-----');
-console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
+console.log($.g3Tips('test').instance.$nodes.eq(0).data('tip'), 1);
 </pre>
 </div>
 <div class="data">
@@ -1530,7 +1532,7 @@ console.log($.g3Tips('convert').instance.$nodes.eq(0).data('tip'), 1);
 //based on previous tab
 
 //the animation reverts to a styled one!
-$.g3Tips.destroy('convert');
+$.g3Tips.destroy('test');
 </pre>
 </div>
 </div>
