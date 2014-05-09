@@ -640,7 +640,7 @@ $.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuart
 
 $.g3Tips('test').init({animation: true, duration: 200, animationIn: 'easeInQuint', animationOut: 'easeOutQuint', from: '150%', to: '300%', eventIn: 'click', eventOut: 'click'});
 </pre>
-<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.animate</code>. You can't disable a javascript animation with: <code>{animation: false/'styled'}</code>; use instead: <code>{off: 'animation'}</code> to revert to css behaviour and additionally re-apply a style animation we done first in above.</p>
+<blockquote style="border: 2px gray dotted"><p><i>Development issues:</i> The following node data is set with this option: <code>this.data.animate</code>. You can't disable a javascript animation with: <code>{animation: false/'styled'}</code>; use instead: <code>{off: 'animation'}</code> to revert to css behaviour and additionally re-apply the style animation you want as we've done it above.</p>
 </blockquote>
 
 Dependencies
