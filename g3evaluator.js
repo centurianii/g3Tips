@@ -3,7 +3,7 @@
  * It uses eval() and emulates console.log() in all clients even in IE browsers.
  * @module {g3.evaluator}
  *
- * @version 0.1.3
+ * @version 0.1.4
  * @author Scripto JS Editor by Centurian Comet.
  * @copyright MIT licence.
 *******************************************************************************/
@@ -251,7 +251,7 @@ g3.evaluator = (function(){
          $excludeNodes: $("form#bodyHtml input[type='text']"), /*see 'load body html button actions'*/
          $name: $('form#addRemoveLib #libName'), /*see 'add/remove library button actions'*/
          $path: $('form#addRemoveLib #libPath'),
-         $opt_name: $('form#optional-addRemoveLib #optional-libName'), /*see 'add/remove library button actions'*/
+         $opt_name: $('form#optional-addRemoveLib #optional-libName'), /*see 'add/remove optional library button actions'*/
          $opt_path: $('form#optional-addRemoveLib #optional-libPath'),
          $title: $('form#blackboard input#title'), /*see 'blackboard button actions'*/
          $panel: $('form#addRemovePanel #panelTitle'), /*see 'add/remove panel button actions'*/
@@ -574,6 +574,14 @@ g3.evaluator = (function(){
       }
       
       /*
+       * replace special html characters with html entities
+       */
+      function safeChars(str){
+         var newStr = str.replace(/</g, '&lt;');
+         return newStr;
+      }
+      
+      /*
        * blackboard button actions
        */
       $("form#blackboard button, form#blackboard input[type='button']").click(function(event){
@@ -584,7 +592,7 @@ g3.evaluator = (function(){
             if(!nodes.$title.val() || (nodes.$title.val() !== panelState.$tab.text())){
                nodes.$title.after('<span id = "message"><span style="color: red; padding: 0 2px;">Error on title!</span><span id="suggestedTitle" style="cursor: pointer"> Suggested: \''+panelState.$tab.text()+'\' (click to load)</span></span>');
             }else
-               panelState.$data.find('pre').text($(event.target).siblings('textarea').val());
+               panelState.$data.find('pre').text(safeChars($(event.target).siblings('textarea').val()));
          }else if(panelState.$tabbedData && ($(this).val() === 'Save to a new tab')){
             //find tab info at closest parent
             var titles = [], $tabs, length = 1;
@@ -607,7 +615,7 @@ g3.evaluator = (function(){
                else
                   $newData = $('<div class="data"><pre></pre></div>').appendTo($('.tabs', panelState.$tabbedData).eq(1));
                $('pre', $newData)
-                  .html($(event.target).siblings('textarea').val());
+                  .html(safeChars($(event.target).siblings('textarea').val()));
                if(panelState.$tab)
                   $('pre', $newData).closest('.data').addClass('hide');
             }
