@@ -1564,7 +1564,7 @@ function load(){
    var tmp,
        arr = [];
 
-   for(var i=0; i<rules.length; i++){
+   for(var i=0; i&lt;rules.length; i++){
       tmp = css.item(0).cssRules[rules[i]].selector.match(/css\.(\w+)/i);
       arr.push('<option>'+tmp[1]+'</option>');
    }
